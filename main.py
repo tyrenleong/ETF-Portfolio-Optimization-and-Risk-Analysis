@@ -5,11 +5,11 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 def main():
-        #pre-defined list of etfs
+        #pre-defined list of stocks
         # *********************************************
         # CAN CHANGE TO DIFFERENT TICKER SYMBOLS
         # *********************************************
-        etfs = ['SPY', 'VOO', 'SCHD', 'VTI', 'QQQ']
+        stocks = ['NVDA', 'NIO', 'TSLA', 'INND', 'INTC']
 
         # calculate the today's date and the date exactly 10 years in the past
         present_date = date.today()
@@ -18,37 +18,37 @@ def main():
         past_date = past_date.strftime('%Y-%m-%d')
 
         # download the etf data from dates above
-        etf_data = funcs.download_data(etfs, past_date, present_date)
+        etf_data = funcs.download_data(stocks, past_date, present_date)
         prices = pd.DataFrame(etf_data)
 
-        # Calculate annualized returns and covariance
+        # calculate annualized returns and covariance
         annualized_returns = funcs.calculate_annualized_returns(prices)
         annualized_covariance = funcs.calculate_annualized_covariance(prices)
 
         
-        # Ask user for target return percentage (e.g., 5% annual return = 0.05)
+        # prompt user for target return
         target_return = float(input("Enter your target annual return percentage (as a decimal, e.g., 0.05 for 5%): "))
 
-        # Optimize the portfolio for minimum volatility at the target return
+        # optimize the portfolio for minimum volatility at the target return
         optimized_portfolio = funcs.optimize_portfolio(annualized_returns, annualized_covariance, target_return)
 
-        # Display the optimized portfolio weights
+        # display the optimized portfolio weights
         optimized_weights = optimized_portfolio.x
         print("Optimized Portfolio Weights (Min Volatility):")
-        for etf, weight in zip(etfs, optimized_weights):
+        for etf, weight in zip(stocks, optimized_weights):
             print(f"{etf}: {weight:.4f}")
 
-        # Calculate and display the sum of the optimized weights
+        # calculate and display the sum of the optimized weights
         weights_sum = np.sum(optimized_weights)
         print(f"Sum of Optimized Weights: {weights_sum:.4f}")
 
-        # Equal weights for comparison
-        equal_weights = np.array([1 / len(etfs)] * len(etfs))  # Equal weights for all ETFs
+        # equal weights for comparison
+        equal_weights = np.array([1 / len(stocks)] * len(stocks))  # equal weights for all stocks
 
-        # Performance of the optimized portfolio
+        # performance of the optimized portfolio
         opt_return, opt_std_dev = funcs.portfolio_performance(optimized_weights, annualized_returns, annualized_covariance)
 
-        # Performance of the equally weighted portfolio
+        # performance of the equally weighted portfolio
         eq_return, eq_std_dev = funcs.portfolio_performance(equal_weights, annualized_returns, annualized_covariance)
 
         # Print the comparison between optimized and equal weights portfolios
