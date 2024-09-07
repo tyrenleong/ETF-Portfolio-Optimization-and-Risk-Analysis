@@ -11,7 +11,7 @@ Clone the Repository
 
 
 ```bash
-git clone https://github.com/tyrenleong/
+git clone https://github.com/tyrenleong/Stock-Portfolio-Optimization-and-Risk-Analysis.git
 cd 
 ```
 
